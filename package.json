@@ -1,0 +1,36 @@
+{
+  "name": "white_dog",
+  "version": "1.0.0",
+  "description": "小白犬",
+  "main": "./prod/bot.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node -r dotenv/config ./prod/bot.js",
+    "web": "node -r dotenv/config ./web/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zvn2060/White-Doggy-Discord-Bot.git"
+  },
+  "keywords": [
+    "Discord Bot"
+  ],
+  "author": "HI_OuO",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zvn2060/White-Doggy-Discord-Bot/issues"
+  },
+  "homepage": "https://github.com/zvn2060/White-Doggy-Discord-Bot#readme",
+  "dependencies": {
+    "@discordjs/rest": "^1.1.0",
+    "discord-api-types": "^0.37.5",
+    "discord.js": "^14.3.0",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "undici": "^5.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.14",
+    "typescript": "^4.8.2"
+  }
+}
