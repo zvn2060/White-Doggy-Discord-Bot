@@ -1,4 +1,3 @@
-// https://white-doggy.glitch.me/shutdown
 import express, { Express, Request, Response } from "express"
 import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
 import { exit } from 'node:process';
@@ -13,8 +12,6 @@ var rest: REST;
 const app: Express = express();
 const port = 5000;
 
-var keepAlive = require('keep-alive');
-keepAlive.add('https://white-doggy.glitch.me/keepalive', 240000);
 main();
 
 function main() {
@@ -35,10 +32,6 @@ function main() {
 	messageCreate(client);
 
 	client.login(BOT_TOKEN);
-
-	app.get('/keepalive', (request: Request, response: Response) => { })
-	app.get('/shutdown', (request: Request, response: Response) => { exit(0); })
-
 }
 
 
