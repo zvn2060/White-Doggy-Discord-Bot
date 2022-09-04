@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "wake": "node -r dotenv/config ./prod/bot.js",
+    "start": "node -r dotenv/config ./prod/bot.js",
     "web": "node -r dotenv/config ./web/index.js"
   },
   "repository": {
