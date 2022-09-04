@@ -1,29 +1,48 @@
-import { Client, GatewayIntentBits, Message, REST, Routes } from "discord.js";
+// https://white-doggy.glitch.me/shutdown
+import express, { Express, Request, Response } from "express"
+import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
+import { exit } from 'node:process';
+import ready from './events/ready';
+import interactionCreate from './events/interactionCreate';
+import messageCreate from './events/messageCreate';
 
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
-const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN!;
+var client: Client;
+var rest: REST;
+const app: Express = express();
+const port = 5000;
 
-const rest: REST = new REST({ version: '10' }).setToken(BOT_TOKEN);
+var keepAlive = require('keep-alive');
+keepAlive.add('https://white-doggy.glitch.me/keepalive', 240000);
+main();
 
-const guild_id = "1013282681032814634"
-const channel_id = "1013282681032814637"
-// When the client is ready, run this code (only once)
-client.once('ready', onReady);
+function main() {
+	const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
-client.on("messageCreate", onMessageCreate);
-
-// Login to Discord with your client's token
-client.login(process.env.DISCORD_BOT_TOKEN);
-
-async function sendMessage(channel_id: string, message: string) {
-	try {
-		await rest.post(Routes.channelMessages(channel_id), { body: { content: message }, });
-	} catch (error) {
-		console.error(error);
+	if (!BOT_TOKEN) {
+		console.error("Discord Bot Token Missing");
+		exit(-1);
 	}
+
+	console.log("Bot is starting");
+
+	client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+	rest = new REST({ version: '10' }).setToken(BOT_TOKEN);
+
+	ready(client);
+	interactionCreate(client);
+	messageCreate(client);
+
+	client.login(BOT_TOKEN);
+
+	app.get('/keepalive', (request: Request, response: Response) => { })
+	app.get('/shutdown', (request: Request, response: Response) => { exit(0); })
+
 }
+
+
+
 
 function listMembers(guild_id: string, limit: number) {
 	try {
@@ -34,37 +53,6 @@ function listMembers(guild_id: string, limit: number) {
 	}
 }
 
-function onMessageCreate(message: Message<boolean>) {
 
-	if (message.author.bot || message.channelId != channel_id)
-		return;
 
-	const content = message.content;
 
-	const response = responseMessage(content);
-
-	sendMessage(channel_id, response)
-}
-
-function onReady() {
-
-}
-
-function responseMessage(message: string): string {
-	const array = ["哈哈~屁眼派對!!~", "屁眼屁眼大屁眼!"]
-
-	switch (message) {
-		case "部長好":
-			return "同志們好!!";
-		case "屁眼":
-			return array[Math.floor(Math.random() * array.length)];;
-		case "誰是最可愛的小狗狗?":
-			return "旺~";
-		case "誰是你的マスター？":
-			return "HI_OuO 様"
-		case "誰是你的master?":
-			return "HI_OuO"
-		default:
-			return "";
-	}
-}
