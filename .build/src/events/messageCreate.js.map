@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/events/messageCreate.ts"],
+  "sourcesContent": ["import { Message, Client } from \"discord.js\";\nimport { tackleQuestion } from \"../utility/conversation\";\n\n\nexport default (client: Client): void => {\n    client.on(\"messageCreate\", async (message: Message) => {\n        if (message.author.bot)\n            return;\n\n        const content = message.content;\n\n        const response = tackleQuestion(content);\n\n        if (response != \"\") {\n            await sendReply(message, response);\n        }\n    })\n}\n\nasync function sendReply(message: Message, reply: string) {\n    try {\n        message.reply(reply);\n    } catch (error) {\n        console.error(error);\n    }\n}"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AACA,0BAA+B;AAG/B,IAAO,wBAAQ,CAAC,WAAyB;AACrC,SAAO,GAAG,iBAAiB,OAAO,YAAqB;AACnD,QAAI,QAAQ,OAAO;AACf;AAEJ,UAAM,UAAU,QAAQ;AAExB,UAAM,WAAW,wCAAe;AAEhC,QAAI,YAAY,IAAI;AAChB,YAAM,UAAU,SAAS;AAAA;AAAA;AAAA;AAKrC,yBAAyB,SAAkB,OAAe;AACtD,MAAI;AACA,YAAQ,MAAM;AAAA,WACT,OAAP;AACE,YAAQ,MAAM;AAAA;AAAA;",
+  "names": []
+}

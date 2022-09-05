@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/events/ready.ts"],
+  "sourcesContent": ["import { Client } from \"discord.js\";\nimport { Commands } from \"../commands/commands\";\nimport { fetchAnswers } from \"../utility/conversation\";\n\n\nexport default (client: Client): void => {\n    client.once(\"ready\", async () => {\n        if (!client.user || !client.application)\n            return;\n\n        await client.application.commands.set(Commands);\n\n        console.log(`Ready! Logged in as ${client.user?.tag}`);\n        fetchAnswers();\n    })\n}\n\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AACA,sBAAyB;AACzB,0BAA6B;AAG7B,IAAO,gBAAQ,CAAC,WAAyB;AACrC,SAAO,KAAK,SAAS,YAAY;AANrC;AAOQ,QAAI,CAAC,OAAO,QAAQ,CAAC,OAAO;AACxB;AAEJ,UAAM,OAAO,YAAY,SAAS,IAAI;AAEtC,YAAQ,IAAI,uBAAuB,aAAO,SAAP,mBAAa;AAChD;AAAA;AAAA;",
+  "names": []
+}

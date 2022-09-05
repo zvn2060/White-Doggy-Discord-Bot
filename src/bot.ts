@@ -15,37 +15,38 @@ const port = 5000;
 main();
 
 function main() {
-	const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
+  const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
-	if (!BOT_TOKEN) {
-		console.error("Discord Bot Token Missing");
-		exit(-1);
-	}
+  if (!BOT_TOKEN) {
+    console.error("Discord Bot Token Missing");
+    exit(-1);
+  }
 
-	console.log("Bot is starting");
+  console.log("Bot is starting");
 
-	client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
-	rest = new REST({ version: '10' }).setToken(BOT_TOKEN);
+  client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+  rest = new REST({ version: '10' }).setToken(BOT_TOKEN);
 
-	ready(client);
-	interactionCreate(client);
-	messageCreate(client);
+  ready(client);
+  interactionCreate(client);
+  messageCreate(client);
 
-	client.login(BOT_TOKEN);
+  client.login(BOT_TOKEN);
+
+  app.get('/keepalive', (request: Request, response: Response) => console.log("beep"))
+
+  app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
+
 }
 
 
 
 
 function listMembers(guild_id: string, limit: number) {
-	try {
-		const query = new URLSearchParams({ limit: `${limit}` })
-		return rest.get(Routes.guildMembers(guild_id), { query: query })
-	} catch (error) {
-		console.error(error);
-	}
+  try {
+    const query = new URLSearchParams({ limit: `${limit}` })
+    return rest.get(Routes.guildMembers(guild_id), { query: query })
+  } catch (error) {
+    console.error(error);
+  }
 }
-
-
-
-

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/commands/commands.ts"],
+  "sourcesContent": ["import { Command } from \"./command\";\nimport { Learn } from \"./learn\";\nimport { Wiki } from \"./wiki\";\n\n\nexport const Commands: Command[] = [\n    Wiki,\n    Learn\n]"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AACA,mBAAsB;AACtB,kBAAqB;AAGd,MAAM,WAAsB;AAAA,EAC/B;AAAA,EACA;AAAA;",
+  "names": []
+}

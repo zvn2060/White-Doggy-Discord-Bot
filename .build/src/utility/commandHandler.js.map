@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/utility/commandHandler.ts"],
+  "sourcesContent": ["import fs from 'node:fs';\nimport path from 'node:path';\nimport { Collection, REST, Routes } from 'discord.js';\n\nexport const commands = new Collection();\n\nexport function readCommandFiles(rest: REST) {\n    const commandsPath = path.join(__dirname, '../commands');\n    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));\n\n    for (const file of commandFiles) {\n        const filePath = path.join(commandsPath, file);\n    console.log(filePath);\n\n        const command = require(filePath).command;\n        commands.set(command.data.name, command);\n    }\n\n}\n\n\n\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA,qBAAe;AACf,uBAAiB;AACjB,qBAAyC;AAElC,MAAM,WAAW,IAAI;AAErB,0BAA0B,MAAY;AACzC,QAAM,eAAe,yBAAK,KAAK,WAAW;AAC1C,QAAM,eAAe,uBAAG,YAAY,cAAc,OAAO,UAAQ,KAAK,SAAS;AAE/E,aAAW,QAAQ,cAAc;AAC7B,UAAM,WAAW,yBAAK,KAAK,cAAc;AAC7C,YAAQ,IAAI;AAER,UAAM,UAAU,QAAQ,UAAU;AAClC,aAAS,IAAI,QAAQ,KAAK,MAAM;AAAA;AAAA;",
+  "names": []
+}

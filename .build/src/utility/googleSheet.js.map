@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/utility/googleSheet.ts"],
+  "sourcesContent": ["import { GoogleSpreadsheet } from 'google-spreadsheet';\n\nexport async function getData(docID: string, sheetID: string, credentialsPath: string = './credentials.json'): Promise<any[]> {\n    const result = [];\n    const doc = new GoogleSpreadsheet(docID);\n    const creds = require(credentialsPath);\n    await doc.useServiceAccountAuth(creds);\n    await doc.loadInfo();\n    const sheet = doc.sheetsById[sheetID];\n    const rows = await sheet.getRows();\n    for (var row of rows) {\n        result.push(row._rawData);\n    }\n    return result;\n}\n\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA,gCAAkC;AAElC,uBAA8B,OAAe,SAAiB,kBAA0B,sBAAsC;AAC1H,QAAM,SAAS;AACf,QAAM,MAAM,IAAI,4CAAkB;AAClC,QAAM,QAAQ,QAAQ;AACtB,QAAM,IAAI,sBAAsB;AAChC,QAAM,IAAI;AACV,QAAM,QAAQ,IAAI,WAAW;AAC7B,QAAM,OAAO,MAAM,MAAM;AACzB,WAAS,OAAO,MAAM;AAClB,WAAO,KAAK,IAAI;AAAA;AAEpB,SAAO;AAAA;",
+  "names": []
+}

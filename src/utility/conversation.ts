@@ -54,5 +54,24 @@ export function tackleQuestion(message: string): string {
     }
 
 
-    return answer;
+    return injectValues(answer);
+}
+
+
+function injectValues(response : string): string{
+
+  // inject random fixed decimal
+  var injected = response.replace(/< *\%\.(\d+)f *, *(\d+) *, *(\d+) *>/, decimalReplacer);
+
+  injected = injected.replace(/< *\%d *, *(\d+) *, *(\d+) *>/, integerReplacer)
+  
+  return injected;
+}
+
+function decimalReplacer(match:string, decimal:string, min:string, max:string, offset:number, string:string){
+  return (Math.random() * (parseFloat(max) - parseFloat(min)) + parseFloat(min)).toFixed(parseInt(decimal));
+}
+
+function integerReplacer(match:string, min:string, max:string, offset:number, string:string){
+  return Math.floor(Math.random()*(parseInt(max)-parseInt(min)+1))+parseInt(min).toString();
 }

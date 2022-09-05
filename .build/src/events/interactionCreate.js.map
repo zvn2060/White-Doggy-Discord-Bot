@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/events/interactionCreate.ts"],
+  "sourcesContent": ["import { Client, Interaction } from \"discord.js\";\nimport { cp } from \"fs\";\nimport { Commands } from \"../commands/commands\";\nimport { commands } from \"../utility/commandHandler\";\n\nexport default (client: Client): void => {\n    client.on(\"interactionCreate\", async (interaction: Interaction) => {\n        if (!interaction.isChatInputCommand()) return;\n\n        const command = Commands.find(c => c.name === interaction.commandName)\n\n        if (!command) return;\n\n        await interaction.deferReply();\n\n        command.run(client, interaction);\n    })\n}"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAEA,sBAAyB;AAGzB,IAAO,4BAAQ,CAAC,WAAyB;AACrC,SAAO,GAAG,qBAAqB,OAAO,gBAA6B;AAC/D,QAAI,CAAC,YAAY;AAAsB;AAEvC,UAAM,UAAU,yBAAS,KAAK,OAAK,EAAE,SAAS,YAAY;AAE1D,QAAI,CAAC;AAAS;AAEd,UAAM,YAAY;AAElB,YAAQ,IAAI,QAAQ;AAAA;AAAA;",
+  "names": []
+}

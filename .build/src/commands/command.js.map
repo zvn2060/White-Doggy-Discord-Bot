@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/commands/command.ts"],
+  "sourcesContent": ["import { ChatInputApplicationCommandData, Client, ChatInputCommandInteraction } from \"discord.js\";\n\nexport interface Command extends ChatInputApplicationCommandData {\n    run: (client: Client, interaction: ChatInputCommandInteraction) => void;\n}"],
+  "mappings": ";;AAAA;",
+  "names": []
+}

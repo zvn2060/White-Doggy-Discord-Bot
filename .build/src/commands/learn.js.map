@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../src/commands/learn.ts"],
+  "sourcesContent": ["import { ChatInputCommandInteraction, Client, SlashCommandBuilder } from 'discord.js';\nimport { fetchAnswers } from '../utility/conversation';\nimport { Command } from './command';\n\nexport const Learn: Command = {\n    name: \"learn\",\n    description: \"\u5F9E\u5B78\u7FD2\u55AE\u5B78\u7FD2\u65B0\u56DE\u61C9\",\n    run: async (client: Client, interaction: ChatInputCommandInteraction) => {\n        fetchAnswers().then(() => interaction.followUp({\n            ephemeral: true,\n            content: \"\u5DF2\u5B78\u7FD2\u65B0\u5167\u5BB9\"\n        }));\n    }\n}\n"],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AACA,0BAA6B;AAGtB,MAAM,QAAiB;AAAA,EAC1B,MAAM;AAAA,EACN,aAAa;AAAA,EACb,KAAK,OAAO,QAAgB,gBAA6C;AACrE,4CAAe,KAAK,MAAM,YAAY,SAAS;AAAA,MAC3C,WAAW;AAAA,MACX,SAAS;AAAA;AAAA;AAAA;",
+  "names": []
+}
