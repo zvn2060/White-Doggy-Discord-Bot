@@ -72,6 +72,6 @@ function decimalReplacer(match:string, decimal:string, min:string, max:string, o
   return (Math.random() * (parseFloat(max) - parseFloat(min)) + parseFloat(min)).toFixed(parseInt(decimal));
 }
 
-function integerReplacer(match:string, min:string, max:string, offset:number, string:string){
-  return Math.floor(Math.random()*(parseInt(max)-parseInt(min)+1))+parseInt(min).toString();
+function integerReplacer(match:string, min:string, max:string, offset:number, string:string) : string{
+  return (Math.floor(Math.random()*(parseInt(max)-parseInt(min)+1))+parseInt(min)).toString();
 }
