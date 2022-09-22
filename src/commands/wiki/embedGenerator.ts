@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 import { Page } from "./page";
-import { JSDOM } from "jsdom"
+import * as cheerio from "cheerio"
 import * as Transliterate from "./transliterate"
 
 const axios = require('axios').default;
@@ -45,21 +45,20 @@ async function createDetailedWikiEmbed(page: Page): Promise<EmbedBuilder> {
 
 
 function parseVehicleInfo(htmlResponse: string): [string, string, string[], string[], string] {
-    const dom = new JSDOM(htmlResponse);
-    const spec_card_dom = dom.window.document.querySelector(".specs_card_main");
-    const general_info_dom = spec_card_dom?.querySelector(".general_info");
-    const general_info2_dom = spec_card_dom?.querySelector(".general_info_2");
+    const $  = cheerio.load(htmlResponse);
+    const spec_card_dom = $(".specs_card_main");
+    const general_info_dom = spec_card_dom.find(".general_info");
+    const general_info2_dom = spec_card_dom.find(".general_info_2");
 
-    const image_url = spec_card_dom?.querySelector(".specs_card_main_slider>.specs_card_main_slider_system>div:nth-child(1)>img")?.getAttribute("src")
+    const image_url = spec_card_dom.find(".specs_card_main_slider>.specs_card_main_slider_system>div:nth-child(1)>img").attr("src");
 
-    const nation = (general_info_dom?.querySelector(".general_info_nation")?.textContent ?? "unknown").trim();
-    const rank = (general_info_dom?.querySelector(".general_info_rank")?.textContent ?? "unknown").split(" ")[0].trim();
+    const nation = general_info_dom.find(".general_info_nation").text().trim();
+    const rank = general_info_dom.find(".general_info_rank").text().split(" ")[0].trim();
 
     const vehicle_classes: string[] = [];
     const battle_ratings: string[] = [];
-    general_info2_dom?.querySelectorAll(".general_info_class>div").forEach(ele => { if (ele.textContent) { vehicle_classes.push(ele.textContent.trim()) } });
-
-    general_info2_dom?.querySelectorAll("td").forEach(ele => { if (ele.textContent) { battle_ratings.push(ele.textContent) } })
+    general_info2_dom.find(".general_info_class>div").each((i, ele) =>  vehicle_classes.push($(ele).text().trim()));
+    general_info2_dom.find("td").each((i, ele) =>  battle_ratings.push($(ele).text().trim()));
 
     return [
         Transliterate.nation(nation),

@@ -1,14 +1,10 @@
 import express, { Express, Request, Response } from "express"
-import { Client, GatewayIntentBits, REST, Routes } from "discord.js";
+import { Client, GatewayIntentBits, ChannelType, REST, Routes } from "discord.js";
 import { exit } from 'node:process';
-import ready from './events/ready';
-import interactionCreate from './events/interactionCreate';
-import messageCreate from './events/messageCreate';
-import debug from "./events/debug"
-import rateLimit from "./events/rateLimit"
 import { scheduleJob } from "node-schedule";
 import { initializePageBank } from "./commands/wiki/wiki";
-
+import { addEventListeners } from "./eventListeners/eventListeners";
+import { pushNews } from "./utility/gaijinNews";
 
 var client: Client;
 var rest: REST;
@@ -27,48 +23,63 @@ async function main() {
 
     console.log("Bot is starting");
 
-    client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+    client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
     rest = new REST({ version: '10' }).setToken(BOT_TOKEN);
-    
+
 
     await initializePageBank();
-    ready(client);
-    interactionCreate(client);
-    messageCreate(client);
-    debug(client);
-    rateLimit(client);
+    addEventListeners(client);
+
     client.login(BOT_TOKEN).catch(console.error);
 
-    app.get('/keepalive', (request: Request, response: Response) => console.log("beep"))
-
+    app.get('/keepalive', (req, res) => console.log("beep"));
+    app.get('/guilds/:guildId/members', listMembers);
     app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
-    
-    // 819865905797529610 交流區頻道 ID
-    scheduleJob({ hour: 13, minute: 30 },  (fireDate) => {
-        rest.post(Routes.channelMessages("819865905797529610"), {
-            body: {
-                content: [
-                    `今日聯隊戰 **BR ${currentBattleRating(fireDate)}**`,
-                    "有興趣的玩家歡迎在 **21:45** 左右進到<#1009042130456543302>",
-                    "裡面會有具經驗的人分組以及討論出甚麼載具以及大概怎麼打會比較好",
-                    "希望大家踴躍參與，讓聯隊的排名能夠更前面",
-                    "我們這季的目標是繼續保持前 100 名",
-                    "另外我們未來會執行最低個人評分的標準",
-                    "所以希望大家可以多來累積經驗<:text_welcome:904638663906983946>"
-                ].join("\n")
-            },
-        }).catch(console.error)
-    })
+
+    scheduleJob({ hour: 13, minute: 30 }, squadBattleNotify);
+
+    scheduleJob("*/5 * * * *", checkNews)
+
 }
 
+function checkNews() {
+    const forumChannel = client.channels.resolve("1019925188709716018")
 
-function listMembers(guild_id: string, limit: number) {
-    try {
-        const query = new URLSearchParams({ limit: `${limit}` })
-        return rest.get(Routes.guildMembers(guild_id), { query: query })
-    } catch (error) {
-        console.error(error);
-    }
+    if (forumChannel?.type == ChannelType.GuildForum)
+        pushNews(forumChannel);
+}
+
+function squadBattleNotify(fireDate: Date) {
+    // 1019941616032677888 交流區頻道 ID
+    rest.post(Routes.channelMessages("1019941616032677888"), {
+        body: {
+            content: [
+                `<@&896506243496161340> 今日聯隊戰 **BR ${currentBattleRating(fireDate)}**`,
+                "有興趣的玩家歡迎在 **21:45** 左右進到<#1009042130456543302>",
+                "裡面會有具經驗的人分組以及討論出甚麼載具以及大概怎麼打會比較好",
+                "希望大家踴躍參與，讓聯隊的排名能夠更前面",
+                "我們這季的目標是繼續保持前 100 名",
+                "另外我們未來會執行最低個人評分的標準",
+                "所以希望大家可以多來累積經驗<:text_welcome:904638663906983946>"
+            ].join("\n")
+        },
+    }).catch(console.error)
+}
+
+async function listMembers(request: Request, response: Response) {
+    const guild_id = request.params.guildId;
+    const role_id = request.query.role_id as string;
+    const guild = client.guilds.resolve(guild_id);
+    const result = await guild?.members.fetch()
+    const wanted = result?.filter(member => member.roles.cache.has(role_id))
+        .map(member => ({
+            id: member.user.id,
+            nickname: member.nickname,
+            username: member.user.username,
+            discriminator: member.user.discriminator
+        }));
+
+    response.json(wanted);
 }
 
 
@@ -87,12 +98,12 @@ function currentBattleRating(date: Date) {
 }
 
 
-const $11_3 = new Date(2022, 8, 5);
-const $10_3 = new Date(2022, 8, 12);
-const $9_7 = new Date(2022, 8, 19);
-const $8_7 = new Date(2022, 8, 26);
-const $7_7 = new Date(2022, 9, 3);
-const $6_7 = new Date(2022, 9, 10);
-const $5_7 = new Date(2022, 9, 17);
-const $4_7 = new Date(2022, 9, 24);
-const $3_7 = new Date(2022, 9, 31);
+const $11_3 = new Date(2022, 8, 6);
+const $10_3 = new Date(2022, 8, 13);
+const $9_7 = new Date(2022, 8, 20);
+const $8_7 = new Date(2022, 8, 27);
+const $7_7 = new Date(2022, 9, 4);
+const $6_7 = new Date(2022, 9, 11);
+const $5_7 = new Date(2022, 9, 18);
+const $4_7 = new Date(2022, 9, 25);
+const $3_7 = new Date(2022, 10, 1);
