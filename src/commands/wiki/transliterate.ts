@@ -1,4 +1,3 @@
-
 export function nation(nation: string): string {
     switch (nation) {
         case "USA": return ":flag_us: 美國";

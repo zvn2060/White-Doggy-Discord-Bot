@@ -2,8 +2,7 @@ import { EmbedBuilder } from "discord.js";
 import { Page } from "./page";
 import * as cheerio from "cheerio"
 import * as Transliterate from "./transliterate"
-
-const axios = require('axios').default;
+import {default as axios} from "axios"
 const NO_IMAGE_PLACEHOLDER_URL = "https://i.imgur.com/pyHhaRx.png";
 
 export async function generateEmbed(page: Page, now: number, total: number): Promise<EmbedBuilder> {

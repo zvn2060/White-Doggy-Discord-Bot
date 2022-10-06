@@ -1,8 +1,9 @@
-const axios = require('axios').default;
-const Database = require("@replit/database")
-const db = new Database()
 import { ForumChannel } from "discord.js";
 import * as cheerio from "cheerio"
+import { default as axios } from "axios"
+const Database = require("@replit/database")
+const db = new Database()
+
 
 export async function init() {
     await db.set("latest_news_date", new Date(2022, 8, 19));
@@ -17,7 +18,7 @@ export async function pushNews(forumChannel: ForumChannel) {
     if (unpushedNewsArray.length == 0)
         return;
 
-    const tag = forumChannel.availableTags.find(forumTag => forumTag.name === "情報");
+    const tag = forumChannel.availableTags.find(forumTag => forumTag.name === "新聞");
 
     for (const news of unpushedNewsArray) {
         forumChannel.threads.create({
@@ -39,7 +40,13 @@ export async function pushNews(forumChannel: ForumChannel) {
 
 
 async function scrapeNewsPage() {
-    const response = await axios.get("https://warthunder.com/en/news/");
+    var response;
+    try {
+        response = await axios.get("https://warthunder.com/en/news/")
+    } catch (error) {
+        console.error(error)
+        return [];
+    }
     const $ = cheerio.load(response.data);
     const newsArray: News[] = $('div.showcase__item.widget').slice(0, 5).map((_, ele) => {
         const item = $(ele);

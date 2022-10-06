@@ -1,13 +1,21 @@
-import { Message, Client } from "discord.js";
+import { Message, Client, GuildTextBasedChannel, ChannelType } from "discord.js";
+import { ALLOWED_CATEGORY } from "../constant";
 import { tackleQuestion } from "../utility/conversation";
 import { EventListner } from "./eventListener";
 
-const ALLOW_CHANNEL = ["819865905797529610", "1013282681032814637", "1019941616032677888"];
 
 export const MessageCreate: EventListner = {
     listen: (client: Client): void => {
         client.on("messageCreate", async (message: Message) => {
-            if (message.author.bot || !ALLOW_CHANNEL.includes(message.channelId))
+            const channel = message.channel as GuildTextBasedChannel;
+            const parentId = channel.type === ChannelType.GuildText ? channel.parentId : channel.parent?.parentId;
+            var isChannelMember = false;
+            if (channel.isThread())
+                isChannelMember = channel.members.cache.has(client.user!!.id)
+            else if (channel.isTextBased())
+                isChannelMember = channel.members.has(client.user!!.id)
+
+            if (!isChannelMember || message.author.bot || !parentId || !ALLOWED_CATEGORY.includes(parentId))
                 return;
 
             var content = message.content;

@@ -1,5 +1,6 @@
 { pkgs }: {
     deps = [
+        pkgs.less
         pkgs.vim
         pkgs.yarn
         pkgs.esbuild

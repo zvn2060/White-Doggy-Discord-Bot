@@ -1,6 +1,5 @@
 import { Client} from "discord.js";
 import { Commands } from "../commands/commands";
-import { fetchAnswers } from "../utility/conversation";
 import { EventListner } from "./eventListener";
 
 
@@ -13,7 +12,6 @@ export const Ready: EventListner = {
             await client.application.commands.set(Commands);
 
             console.log(`Ready! Logged in as ${client.user?.tag}`);
-            fetchAnswers();
         })
     }
 }

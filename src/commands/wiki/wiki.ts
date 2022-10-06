@@ -2,8 +2,7 @@ import { ChatInputCommandInteraction, Client, ApplicationCommandOptionType, Auto
 import { Command } from '../command';
 import { Page } from "./page"
 import { PageSelector } from './pageSelector';
-
-const axios = require('axios').default;
+import {default as axios} from "axios"
 
 const WAR_THUNDER_API_BASE_URL = "https://wiki.warthunder.com/api.php";
 const PAGE_BANK = new Map<string, string[]>();
@@ -53,7 +52,7 @@ async function handleWikiCommand(client: Client, interaction: ChatInputCommandIn
         const collector = reply.createMessageComponentCollector({
             filter: collected => collected.customId.startsWith("wiki_") && collected.user.id === interaction.user.id,
             idle: 20000
-        })
+        })    
 
         collector?.on("end", async _ => {
             if (interaction.replied) interaction.editReply({ components: [] })

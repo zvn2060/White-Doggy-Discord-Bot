@@ -5,13 +5,19 @@ import { InteractionCreate } from "./interactionCreate";
 import { MessageCreate } from "./messageCreate";
 import { RateLimited } from "./rateLimit";
 import { Ready } from "./ready";
+import { ThreadCreate } from "./threadCreate";
+import { ThreadMembersUpdate } from "./threadMembersUpdate";
+import { VoiceStateUpdate } from "./voiceStateUpdate";
 
 const EventListners: EventListner[] = [
     Debug,
     InteractionCreate,
     MessageCreate,
     RateLimited,
-    Ready
+    Ready,
+    VoiceStateUpdate,
+    ThreadCreate,
+    ThreadMembersUpdate
 ]
 
 
